@@ -18,11 +18,13 @@ class PostCreateSchema(BasePublishedSchema):
     category: CategorySchema = Field(description="Category")
     image: Image
 
+
 class PostUpdateSchema(BasePublishedSchema):
     title: str = Field(max_length=256, description="Title")
     text: str = Field(description="Text")
     location: LocationSchema = Field(description="Location")
     category: CategorySchema = Field(description="Category")
+
 
 class PostResponseSchema(BaseCreatedAtSchema, BasePublishedSchema):
     id: int = Field(description="ID")

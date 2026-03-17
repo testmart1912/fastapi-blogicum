@@ -1,5 +1,7 @@
 from pydantic import Field
+
 from src.schemas.base import BasePublishedSchema, BaseCreatedAtSchema
+
 
 class CategorySchema(BasePublishedSchema, BaseCreatedAtSchema):
     title: str = Field(max_length=256, description="Title")
