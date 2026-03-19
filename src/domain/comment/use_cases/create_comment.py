@@ -15,7 +15,6 @@ class CreateCommentUseCase:
             comment = self._repo.create(
                 session=session,
                 text=dto.text,
-                is_published=dto.is_published,
                 author_id=dto.author_id,
                 post_id=dto.post_id,
                 created_at=datetime.now(),

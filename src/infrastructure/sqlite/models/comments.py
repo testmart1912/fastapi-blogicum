@@ -9,7 +9,6 @@ class Comment(Base):
     __tablename__ = 'blog_comment'
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    is_published: Mapped[bool] = mapped_column(nullable=False)
     created_at: Mapped[datetime] = mapped_column(nullable=False)
     text: Mapped[str] = mapped_column(nullable=False)
     author_id: Mapped[int] = mapped_column(ForeignKey("auth_user.id"), nullable=False)

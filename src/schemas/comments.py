@@ -1,9 +1,9 @@
 from pydantic import BaseModel, Field, ConfigDict
 
-from src.schemas.base import BasePublishedSchema, BaseCreatedAtSchema
+from src.schemas.base import BaseCreatedAtSchema
 
 
-class CommentResponseSchema(BasePublishedSchema, BaseCreatedAtSchema):
+class CommentResponseSchema(BaseCreatedAtSchema):
     model_config = ConfigDict(from_attributes=True)
     id: int = Field(description='ID')
     post_id: int = Field(description="Post ID")
@@ -16,7 +16,7 @@ class CommentUpdateSchema(BaseModel):
     text: str = Field(description="Comment")
 
 
-class CommentCreateSchema(BasePublishedSchema):
+class CommentCreateSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     post_id: int = Field(description="Post ID")
     author_id: int = Field(description="Author ID")
