@@ -1,14 +1,23 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
-from src.schemas.base import BaseCreatedAtSchema
-from src.schemas.users import UserSchema
+from src.schemas.base import BasePublishedSchema, BaseCreatedAtSchema
 
 
-class CommentSchema(BaseCreatedAtSchema):
+class CommentResponseSchema(BasePublishedSchema, BaseCreatedAtSchema):
+    model_config = ConfigDict(from_attributes=True)
+    id: int = Field(description='ID')
     post: int = Field(description="Post ID")
-    author: UserSchema = Field(description="Author")
+    author: int = Field(description="Author ID")
     text: str = Field(description="Comment")
 
 
 class CommentUpdateSchema(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    text: str = Field(description="Comment")
+
+
+class CommentCreateSchema(BasePublishedSchema):
+    model_config = ConfigDict(from_attributes=True)
+    post: int = Field(description="Post ID")
+    author: int = Field(description="Author ID")
     text: str = Field(description="Comment")

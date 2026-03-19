@@ -1,10 +1,12 @@
 from datetime import date, datetime
 from typing import Optional
 
-from pydantic import BaseModel, EmailStr, SecretStr
+from pydantic import BaseModel, EmailStr, SecretStr, ConfigDict
 
 
 class UserSchema(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
     username: str
     first_name: Optional[str]
     last_name: Optional[str]
