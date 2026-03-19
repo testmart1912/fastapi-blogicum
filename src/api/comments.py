@@ -1,56 +1,55 @@
-from datetime import datetime
+from typing import List
+from fastapi import APIRouter, status, Depends, Query
+from schemas.comments import CommentResponseSchema, CommentCreateSchema, CommentUpdateSchema
 
-from fastapi import APIRouter, status, HTTPException
+from domain.comment.use_cases.get_comment_by_id import GetCommentByIdUseCase
+from domain.comment.use_cases.create_comment import CreateCommentUseCase
+from domain.comment.use_cases.update_comment import UpdateCommentUseCase
+from domain.comment.use_cases.delete_comment import DeleteCommentUseCase
+from domain.comment.use_cases.get_all_comments import GetAllCommentsUseCase
 
-from src.schemas.comments import CommentResponseSchema, CommentUpdateSchema, CommentCreateSchema
+from api.depends import get_get_comment_by_id_use_case, get_create_comment_use_case, get_update_comment_use_case, get_delete_comment_use_case, get_get_all_comments_use_case
 
 router = APIRouter()
 
-comments = []
 
-@router.get('/comments/{comment_id}')
-async def get_comment(comment_id: int):
-    if comment_id < len(comments):
-        return comments[comment_id]
-    else:
-        raise HTTPException(detail="Comment not found", status_code=status.HTTP_404_NOT_FOUND)
+@router.get('/comments', status_code=status.HTTP_200_OK, response_model=List[CommentResponseSchema])
+async def get_all_comments(
+    limit: int = Query(100, ge=1, le=1000),
+    offset: int = Query(0, ge=0),
+    use_case: GetAllCommentsUseCase = Depends(get_get_all_comments_use_case)) -> List[CommentResponseSchema]:
+    comments = await use_case.execute(limit=limit, offset=offset)
+    return comments
 
-@router.get('/comments')
-async def get_all_comments(post_id: int):
-    post_comments = [comment for comment in comments if comment.get("post") == post_id]
-    if not post_comments:
-        raise HTTPException(
-            detail="No comments found",
-            status_code=status.HTTP_404_NOT_FOUND
-        )
-    return post_comments
 
-@router.post('/comments', status_code=status.HTTP_201_CREATED, response_model=CommentResponseSchema)
-async def create_comment(comment: CommentCreateSchema) -> dict:
-    response = {
-        'id': len(comments),
-        'post': comment.post,
-        'author': comment.author,
-        'text': comment.text,
-        'created_at': datetime.now(),
-    }
-    comments.append(response)
-    return CommentResponseSchema.model_validate(obj=response)
+@router.get('/comment/{comment_id}', status_code=status.HTTP_200_OK, response_model=CommentResponseSchema)
+async def get_comment_by_id(
+    comment_id: int,
+    use_case: GetCommentByIdUseCase = Depends(get_get_comment_by_id_use_case)) -> CommentResponseSchema:
+    comment = await use_case.execute(comment_id=comment_id)
+    return comment
 
-@router.put('/comments/{comment_id}', status_code=status.HTTP_200_OK, response_model=CommentResponseSchema)
-async def update_comment(comment_id: int, comment: CommentUpdateSchema) -> dict:
-    if comment_id >= len(comments):
-        raise HTTPException(detail="Comment not found", status_code=status.HTTP_404_NOT_FOUND,)
-    response = comments[comment_id]
-    response['text'] = comment.text
-    return CommentResponseSchema.model_validate(obj=response)
 
-@router.delete('/comments/{comment_id}', status_code=status.HTTP_200_OK)
-async def delete_comment(comment_id: int) -> dict:
-    if comment_id >= len(comments):
-        raise HTTPException(
-            detail="Comment not found",
-            status_code=status.HTTP_404_NOT_FOUND,
-        )
-    comments.pop(comment_id)
-    return {'message': "Comment has been deleted"}
+@router.post('/comment', status_code=status.HTTP_201_CREATED, response_model=CommentResponseSchema)
+async def create_comment(
+    dto: CommentCreateSchema,
+    use_case: CreateCommentUseCase = Depends(get_create_comment_use_case)) -> CommentResponseSchema:
+    comment = await use_case.execute(dto=dto)
+    return comment
+
+
+@router.put('/comment/{comment_id}', status_code=status.HTTP_200_OK, response_model=CommentResponseSchema)
+async def update_comment(
+    comment_id: int,
+    dto: CommentUpdateSchema,
+    use_case: UpdateCommentUseCase = Depends(get_update_comment_use_case)) -> CommentResponseSchema:
+    comment = await use_case.execute(comment_id=comment_id, dto=dto)
+    return comment
+
+
+@router.delete('/comment/{comment_id}', status_code=status.HTTP_200_OK)
+async def delete_comment(
+    comment_id: int,
+    use_case: DeleteCommentUseCase = Depends(get_delete_comment_use_case)) -> dict:
+    await use_case.execute(comment_id=comment_id)
+    return {'message': 'Comment has been deleted'}
