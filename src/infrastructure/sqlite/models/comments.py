@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from infrastructure.sqlite.database import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey
 
+from src.infrastructure.sqlite.database import Base
 
 class Comment(Base):
     __tablename__ = 'blog_comment'

@@ -1,7 +1,7 @@
-from datetime import date, datetime
+from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel, EmailStr, SecretStr, ConfigDict
+from pydantic import BaseModel, SecretStr, ConfigDict
 
 
 class UserSchema(BaseModel):
@@ -10,10 +10,10 @@ class UserSchema(BaseModel):
     username: str
     first_name: Optional[str]
     last_name: Optional[str]
-    email: Optional[EmailStr]
-    passwd: SecretStr
+    email: Optional[str]
+    password: SecretStr
     is_staff: bool
     is_active: bool
     is_superuser: bool
-    last_login: datetime
-    date_joined: date
+    last_login: Optional[datetime]
+    date_joined: datetime

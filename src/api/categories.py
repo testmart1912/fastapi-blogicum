@@ -1,15 +1,15 @@
 from typing import List
 from fastapi import APIRouter, status, Depends, Query
-from schemas.categories import CategorySchema, CategoryCreateSchema, CategoryUpdateSchema
 
-from domain.category.use_cases.get_category_by_slug import GetCategoryBySlugUseCase
-from domain.category.use_cases.get_category_by_id import GetCategoryByIdUseCase
-from domain.category.use_cases.create_category import CreateCategoryUseCase
-from domain.category.use_cases.update_category import UpdateCategoryUseCase
-from domain.category.use_cases.delete_category import DeleteCategoryUseCase
-from domain.category.use_cases.get_all_categories import GetAllCategoriesUseCase
+from src.schemas.categories import CategorySchema, CategoryCreateSchema, CategoryUpdateSchema
+from src.domain.category.use_cases.get_category_by_slug import GetCategoryBySlugUseCase
+from src.domain.category.use_cases.get_category_by_id import GetCategoryByIdUseCase
+from src.domain.category.use_cases.create_category import CreateCategoryUseCase
+from src.domain.category.use_cases.update_category import UpdateCategoryUseCase
+from src.domain.category.use_cases.delete_category import DeleteCategoryUseCase
+from src.domain.category.use_cases.get_all_categories import GetAllCategoriesUseCase
 
-from api.depends import get_get_category_by_slug_use_case, get_get_category_by_id_use_case, get_create_category_use_case, get_update_category_use_case, get_delete_category_use_case, get_get_all_categories_use_case
+from src.api.depends import get_get_category_by_slug_use_case, get_get_category_by_id_use_case, get_create_category_use_case, get_update_category_use_case, get_delete_category_use_case, get_get_all_categories_use_case
 
 router = APIRouter()
 

@@ -1,8 +1,8 @@
 from datetime import datetime
 
-from infrastructure.sqlite.database import database
-from infrastructure.sqlite.repositories.comments import CommentRepository
-from schemas.comments import CommentResponseSchema, CommentCreateSchema
+from src.infrastructure.sqlite.database import database
+from src.infrastructure.sqlite.repositories.comments import CommentRepository
+from src.schemas.comments import CommentResponseSchema, CommentCreateSchema
 
 
 class CreateCommentUseCase:

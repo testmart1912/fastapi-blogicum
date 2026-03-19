@@ -1,7 +1,7 @@
 from fastapi import HTTPException, status
 
-from infrastructure.sqlite.database import database
-from infrastructure.sqlite.repositories.categories import CategoryRepository
+from src.infrastructure.sqlite.database import database
+from src.infrastructure.sqlite.repositories.categories import CategoryRepository
 
 
 class DeleteCategoryUseCase:

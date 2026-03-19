@@ -1,8 +1,8 @@
 from typing import List
 
-from infrastructure.sqlite.database import database
-from infrastructure.sqlite.repositories.categories import CategoryRepository
-from schemas.categories import CategorySchema
+from src.infrastructure.sqlite.database import database
+from src.infrastructure.sqlite.repositories.categories import CategoryRepository
+from src.schemas.categories import CategorySchema
 
 
 class GetAllCategoriesUseCase:

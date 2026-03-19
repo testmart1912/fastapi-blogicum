@@ -12,10 +12,10 @@ class PostCreateSchema(BasePublishedSchema):
     model_config = ConfigDict(from_attributes=True)
     title: str = Field(max_length=256, description="Title")
     text: str = Field(description="Text")
-    author: int = Field(description="Author ID")
+    author_id: int = Field(description="Author ID")
     pub_date: datetime = Field(default_factory=datetime.today, description="Date of publication")
-    location: int = Field(description="Location ID")
-    category: int = Field(description="Category ID")
+    location_id: int = Field(description="Location ID")
+    category_id: int = Field(description="Category ID")
     image: str = Field(description="Image")
 
 
@@ -23,8 +23,8 @@ class PostUpdateSchema(BasePublishedSchema):
     model_config = ConfigDict(from_attributes=True)
     title: str = Field(max_length=256, description="Title")
     text: str = Field(description="Text")
-    location: int = Field(description="Location ID")
-    category: int = Field(description="Category ID")
+    location_id: int = Field(description="Location ID")
+    category_id: int = Field(description="Category ID")
 
 
 class PostResponseSchema(BaseCreatedAtSchema, BasePublishedSchema):

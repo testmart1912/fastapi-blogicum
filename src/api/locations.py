@@ -1,14 +1,14 @@
 from typing import List
 from fastapi import APIRouter, status, Depends, Query
-from schemas.locations import LocationSchema, LocationCreateUpdateSchema
 
-from domain.location.use_cases.get_location_by_id import GetLocationByIdUseCase
-from domain.location.use_cases.create_location import CreateLocationUseCase
-from domain.location.use_cases.update_location import UpdateLocationUseCase
-from domain.location.use_cases.delete_location import DeleteLocationUseCase
-from domain.location.use_cases.get_all_locations import GetAllLocationsUseCase
+from src.schemas.locations import LocationSchema, LocationCreateUpdateSchema
+from src.domain.location.use_cases.get_location_by_id import GetLocationByIdUseCase
+from src.domain.location.use_cases.create_location import CreateLocationUseCase
+from src.domain.location.use_cases.update_location import UpdateLocationUseCase
+from src.domain.location.use_cases.delete_location import DeleteLocationUseCase
+from src.domain.location.use_cases.get_all_locations import GetAllLocationsUseCase
 
-from api.depends import get_get_location_by_id_use_case, get_create_location_use_case, get_update_location_use_case, get_delete_location_use_case, get_get_all_locations_use_case
+from src.api.depends import get_get_location_by_id_use_case, get_create_location_use_case, get_update_location_use_case, get_delete_location_use_case, get_get_all_locations_use_case
 
 router = APIRouter()
 
