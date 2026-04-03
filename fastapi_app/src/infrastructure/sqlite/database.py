@@ -8,7 +8,6 @@ from sqlalchemy.ext.declarative import declarative_base
 
 class Database:
     def __init__(self):
-        # Как в https://github.com/M1ssshka/fastapi-blogicum — корень репозитория и db.sqlite3
         base_dir = Path(__file__).resolve().parent.parent.parent.parent.parent
         db_path = base_dir / "db.sqlite3"
         self._db_url = f"sqlite:///{db_path}"
