@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
-from src.infrastructure.sqlite.repositories.base import BaseRepository
-from src.infrastructure.sqlite.models.categories import Category
+from infrastructure.sqlite.repositories.base import BaseRepository
+from infrastructure.sqlite.models.categories import Category
 
 
 class CategoryRepository(BaseRepository[Category]):

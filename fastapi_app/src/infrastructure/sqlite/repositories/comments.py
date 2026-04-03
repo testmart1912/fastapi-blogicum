@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session, joinedload
 
-from src.infrastructure.sqlite.repositories.base import BaseRepository
-from src.infrastructure.sqlite.models.comments import Comment
+from infrastructure.sqlite.repositories.base import BaseRepository
+from infrastructure.sqlite.models.comments import Comment
 
 
 class CommentRepository(BaseRepository[Comment]):

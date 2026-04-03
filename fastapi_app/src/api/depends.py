@@ -1,34 +1,34 @@
 # User
-from src.domain.user.use_cases.get_user_by_username import GetUserByUsernameUseCase
+from domain.user.use_cases.get_user_by_username import GetUserByUsernameUseCase
 
 # Category
-from src.domain.category.use_cases.get_category_by_slug import GetCategoryBySlugUseCase
-from src.domain.category.use_cases.get_category_by_id import GetCategoryByIdUseCase
-from src.domain.category.use_cases.create_category import CreateCategoryUseCase
-from src.domain.category.use_cases.update_category import UpdateCategoryUseCase
-from src.domain.category.use_cases.delete_category import DeleteCategoryUseCase
-from src.domain.category.use_cases.get_all_categories import GetAllCategoriesUseCase
+from domain.category.use_cases.get_category_by_slug import GetCategoryBySlugUseCase
+from domain.category.use_cases.get_category_by_id import GetCategoryByIdUseCase
+from domain.category.use_cases.create_category import CreateCategoryUseCase
+from domain.category.use_cases.update_category import UpdateCategoryUseCase
+from domain.category.use_cases.delete_category import DeleteCategoryUseCase
+from domain.category.use_cases.get_all_categories import GetAllCategoriesUseCase
 
 # Location
-from src.domain.location.use_cases.get_location_by_id import GetLocationByIdUseCase
-from src.domain.location.use_cases.create_location import CreateLocationUseCase
-from src.domain.location.use_cases.update_location import UpdateLocationUseCase
-from src.domain.location.use_cases.delete_location import DeleteLocationUseCase
-from src.domain.location.use_cases.get_all_locations import GetAllLocationsUseCase
+from domain.location.use_cases.get_location_by_id import GetLocationByIdUseCase
+from domain.location.use_cases.create_location import CreateLocationUseCase
+from domain.location.use_cases.update_location import UpdateLocationUseCase
+from domain.location.use_cases.delete_location import DeleteLocationUseCase
+from domain.location.use_cases.get_all_locations import GetAllLocationsUseCase
 
 # Post
-from src.domain.post.use_cases.get_post_by_id import GetPostByIdUseCase
-from src.domain.post.use_cases.create_post import CreatePostUseCase
-from src.domain.post.use_cases.update_post import UpdatePostUseCase
-from src.domain.post.use_cases.delete_post import DeletePostUseCase
-from src.domain.post.use_cases.get_all_posts import GetAllPostsUseCase
+from domain.post.use_cases.get_post_by_id import GetPostByIdUseCase
+from domain.post.use_cases.create_post import CreatePostUseCase
+from domain.post.use_cases.update_post import UpdatePostUseCase
+from domain.post.use_cases.delete_post import DeletePostUseCase
+from domain.post.use_cases.get_all_posts import GetAllPostsUseCase
 
 # Comment
-from src.domain.comment.use_cases.get_comment_by_id import GetCommentByIdUseCase
-from src.domain.comment.use_cases.create_comment import CreateCommentUseCase
-from src.domain.comment.use_cases.update_comment import UpdateCommentUseCase
-from src.domain.comment.use_cases.delete_comment import DeleteCommentUseCase
-from src.domain.comment.use_cases.get_all_comments import GetAllCommentsUseCase
+from domain.comment.use_cases.get_comment_by_id import GetCommentByIdUseCase
+from domain.comment.use_cases.create_comment import CreateCommentUseCase
+from domain.comment.use_cases.update_comment import UpdateCommentUseCase
+from domain.comment.use_cases.delete_comment import DeleteCommentUseCase
+from domain.comment.use_cases.get_all_comments import GetAllCommentsUseCase
 
 
 # User factories

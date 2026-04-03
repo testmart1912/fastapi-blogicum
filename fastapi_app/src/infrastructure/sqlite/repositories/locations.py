@@ -1,5 +1,5 @@
-from src.infrastructure.sqlite.repositories.base import BaseRepository
-from src.infrastructure.sqlite.models.locations import Location
+from infrastructure.sqlite.repositories.base import BaseRepository
+from infrastructure.sqlite.models.locations import Location
 
 
 class LocationRepository(BaseRepository[Location]):

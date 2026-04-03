@@ -1,14 +1,14 @@
 from typing import List
 from fastapi import APIRouter, status, Depends, Query
 
-from src.schemas.comments import CommentResponseSchema, CommentCreateSchema, CommentUpdateSchema
-from src.domain.comment.use_cases.get_comment_by_id import GetCommentByIdUseCase
-from src.domain.comment.use_cases.create_comment import CreateCommentUseCase
-from src.domain.comment.use_cases.update_comment import UpdateCommentUseCase
-from src.domain.comment.use_cases.delete_comment import DeleteCommentUseCase
-from src.domain.comment.use_cases.get_all_comments import GetAllCommentsUseCase
+from schemas.comments import CommentResponseSchema, CommentCreateSchema, CommentUpdateSchema
+from domain.comment.use_cases.get_comment_by_id import GetCommentByIdUseCase
+from domain.comment.use_cases.create_comment import CreateCommentUseCase
+from domain.comment.use_cases.update_comment import UpdateCommentUseCase
+from domain.comment.use_cases.delete_comment import DeleteCommentUseCase
+from domain.comment.use_cases.get_all_comments import GetAllCommentsUseCase
 
-from src.api.depends import get_get_comment_by_id_use_case, get_create_comment_use_case, get_update_comment_use_case, get_delete_comment_use_case, get_get_all_comments_use_case
+from api.depends import get_get_comment_by_id_use_case, get_create_comment_use_case, get_update_comment_use_case, get_delete_comment_use_case, get_get_all_comments_use_case
 
 router = APIRouter()
 

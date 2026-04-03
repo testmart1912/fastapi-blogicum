@@ -1,6 +1,6 @@
 from pydantic import Field, ConfigDict, BaseModel
 
-from src.schemas.base import BasePublishedSchema, BaseCreatedAtSchema
+from schemas.base import BasePublishedSchema, BaseCreatedAtSchema
 
 
 class CategoryCreateSchema(BasePublishedSchema):

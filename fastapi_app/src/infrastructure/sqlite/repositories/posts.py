@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session, joinedload
 
-from src.infrastructure.sqlite.repositories.base import BaseRepository
-from src.infrastructure.sqlite.models.posts import Post
+from infrastructure.sqlite.repositories.base import BaseRepository
+from infrastructure.sqlite.models.posts import Post
 
 
 class PostRepository(BaseRepository[Post]):
@@ -36,4 +36,9 @@ class PostRepository(BaseRepository[Post]):
             )
             .where(self._model.id == post_id)
         )
-        return query.scalar()
+        post = query.scalar()
+
+        if not post:
+            raise
+
+        return post

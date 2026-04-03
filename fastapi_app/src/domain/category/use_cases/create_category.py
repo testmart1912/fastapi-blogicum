@@ -1,8 +1,8 @@
 from datetime import datetime
 
-from src.infrastructure.sqlite.database import database
-from src.infrastructure.sqlite.repositories.categories import CategoryRepository
-from src.schemas.categories import CategorySchema, CategoryCreateSchema
+from infrastructure.sqlite.database import database
+from infrastructure.sqlite.repositories.categories import CategoryRepository
+from schemas.categories import CategorySchema, CategoryCreateSchema
 
 
 class CreateCategoryUseCase:

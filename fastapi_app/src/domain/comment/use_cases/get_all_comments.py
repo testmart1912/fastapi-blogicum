@@ -1,8 +1,8 @@
 from typing import List
 
-from src.infrastructure.sqlite.database import database
-from src.infrastructure.sqlite.repositories.comments import CommentRepository
-from src.schemas.comments import CommentResponseSchema
+from infrastructure.sqlite.database import database
+from infrastructure.sqlite.repositories.comments import CommentRepository
+from schemas.comments import CommentResponseSchema
 
 
 class GetAllCommentsUseCase:
