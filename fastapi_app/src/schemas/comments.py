@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field, ConfigDict
 
-from schemas.base import BaseCreatedAtSchema
+from src.schemas.base import BaseCreatedAtSchema
 
 
 class CommentResponseSchema(BaseCreatedAtSchema):

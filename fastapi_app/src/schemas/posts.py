@@ -2,10 +2,10 @@ from datetime import datetime
 
 from pydantic import Field, ConfigDict
 
-from schemas.users import UserSchema
-from schemas.locations import LocationSchema
-from schemas.categories import CategorySchema
-from schemas.base import BaseCreatedAtSchema, BasePublishedSchema
+from src.schemas.users import UserSchema
+from src.schemas.locations import LocationSchema
+from src.schemas.categories import CategorySchema
+from src.schemas.base import BaseCreatedAtSchema, BasePublishedSchema
 
 
 class PostCreateSchema(BasePublishedSchema):

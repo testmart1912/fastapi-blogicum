@@ -1,14 +1,14 @@
 from typing import List
 from fastapi import APIRouter, status, Depends, Query
 
-from schemas.posts import PostResponseSchema, PostCreateSchema, PostUpdateSchema
-from domain.post.use_cases.get_post_by_id import GetPostByIdUseCase
-from domain.post.use_cases.create_post import CreatePostUseCase
-from domain.post.use_cases.update_post import UpdatePostUseCase
-from domain.post.use_cases.delete_post import DeletePostUseCase
-from domain.post.use_cases.get_all_posts import GetAllPostsUseCase
+from src.schemas.posts import PostResponseSchema, PostCreateSchema, PostUpdateSchema
+from src.domain.post.use_cases.get_post_by_id import GetPostByIdUseCase
+from src.domain.post.use_cases.create_post import CreatePostUseCase
+from src.domain.post.use_cases.update_post import UpdatePostUseCase
+from src.domain.post.use_cases.delete_post import DeletePostUseCase
+from src.domain.post.use_cases.get_all_posts import GetAllPostsUseCase
 
-from api.depends import get_get_post_by_id_use_case, get_create_post_use_case, get_update_post_use_case, get_delete_post_use_case, get_get_all_posts_use_case
+from src.api.depends import get_get_post_by_id_use_case, get_create_post_use_case, get_update_post_use_case, get_delete_post_use_case, get_get_all_posts_use_case
 
 router = APIRouter()
 

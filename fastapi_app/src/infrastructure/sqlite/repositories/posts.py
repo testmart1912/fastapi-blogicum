@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session, joinedload
 
-from infrastructure.sqlite.repositories.base import BaseRepository
-from infrastructure.sqlite.models.posts import Post
+from src.infrastructure.sqlite.repositories.base import BaseRepository
+from src.infrastructure.sqlite.models.posts import Post
 
 
 class PostRepository(BaseRepository[Post]):

@@ -1,6 +1,6 @@
 from pydantic import Field, ConfigDict
 
-from schemas.base import BasePublishedSchema, BaseCreatedAtSchema
+from src.schemas.base import BasePublishedSchema, BaseCreatedAtSchema
 
 
 class LocationCreateUpdateSchema(BasePublishedSchema):

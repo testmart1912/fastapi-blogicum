@@ -1,8 +1,8 @@
 from typing import List
 
-from infrastructure.sqlite.database import database
-from infrastructure.sqlite.repositories.locations import LocationRepository
-from schemas.locations import LocationSchema
+from src.infrastructure.sqlite.database import database
+from src.infrastructure.sqlite.repositories.locations import LocationRepository
+from src.schemas.locations import LocationSchema
 
 
 class GetAllLocationsUseCase:

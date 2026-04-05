@@ -1,8 +1,8 @@
 from fastapi import HTTPException, status
 
-from infrastructure.sqlite.database import database
-from infrastructure.sqlite.repositories.posts import PostRepository
-from schemas.posts import PostResponseSchema
+from src.infrastructure.sqlite.database import database
+from src.infrastructure.sqlite.repositories.posts import PostRepository
+from src.schemas.posts import PostResponseSchema
 
 
 class GetPostByIdUseCase:
