@@ -13,11 +13,11 @@ class CommentResponseSchema(BaseCreatedAtSchema):
 
 class CommentUpdateSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
-    text: str = Field(description="Comment")
+    text: str = Field(min_length=1, max_length=256, description="Comment")
 
 
 class CommentCreateSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     post_id: int = Field(description="Post ID")
     author_id: int = Field(description="Author ID")
-    text: str = Field(description="Comment")
+    text: str = Field(min_length=1, max_length=256, description="Comment")

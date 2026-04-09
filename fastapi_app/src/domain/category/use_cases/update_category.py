@@ -1,5 +1,3 @@
-from fastapi import HTTPException, status
-
 from src.infrastructure.sqlite.database import database
 from src.infrastructure.sqlite.repositories.categories import CategoryRepository
 from src.schemas.categories import CategorySchema, CategoryUpdateSchema
@@ -19,11 +17,5 @@ class UpdateCategoryUseCase:
                 description=dto.description,
                 is_published=dto.is_published,
             )
-
-            if category is None:
-                raise HTTPException(
-                    status_code=status.HTTP_404_NOT_FOUND,
-                    detail=f'Category with id {category_id} not found',
-                )
 
         return CategorySchema.model_validate(obj=category)

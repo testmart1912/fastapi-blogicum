@@ -1,8 +1,8 @@
-from fastapi import APIRouter, status, Depends
+from fastapi import APIRouter, status, Depends, HTTPException
 
 from src.schemas.users import UserSchema
 from src.domain.user.use_cases.get_user_by_username import GetUserByUsernameUseCase
-
+from src.core.exceptions.domain_exceptions import UserNotFoundByLoginException
 from src.api.depends import get_get_user_by_username_use_case
 
 router = APIRouter()
@@ -13,5 +13,7 @@ async def get_user_by_username(
     username: str,
     use_case: GetUserByUsernameUseCase = Depends(get_get_user_by_username_use_case),
 ) -> UserSchema:
-    user = await use_case.execute(username=username)
-    return user
+    try:
+        return await use_case.execute(username=username)
+    except UserNotFoundByLoginException as exc:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, detail=exc.get_detail())

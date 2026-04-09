@@ -1,5 +1,3 @@
-from fastapi import HTTPException, status
-
 from src.infrastructure.sqlite.database import database
 from src.infrastructure.sqlite.repositories.locations import LocationRepository
 from src.schemas.locations import LocationSchema, LocationCreateUpdateSchema
@@ -18,11 +16,5 @@ class UpdateLocationUseCase:
                 name=dto.name,
                 is_published=dto.is_published,
             )
-
-            if location is None:
-                raise HTTPException(
-                    status_code=status.HTTP_404_NOT_FOUND,
-                    detail=f'Location with id {location_id} not found',
-                )
 
         return LocationSchema.model_validate(obj=location)

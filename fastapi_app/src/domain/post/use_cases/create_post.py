@@ -1,19 +1,25 @@
 from datetime import datetime
 
-from fastapi import HTTPException, status
-
 from src.infrastructure.sqlite.database import database
 from src.infrastructure.sqlite.repositories.posts import PostRepository
 from src.schemas.posts import PostResponseSchema, PostCreateSchema
+from src.infrastructure.sqlite.repositories.categories import CategoryRepository
+from src.infrastructure.sqlite.repositories.locations import LocationRepository
 
 
 class CreatePostUseCase:
     def __init__(self):
         self._database = database
         self._repo = PostRepository()
+        self._category_repo = CategoryRepository()
+        self._location_repo = LocationRepository()
 
     async def execute(self, dto: PostCreateSchema) -> PostResponseSchema:
         with self._database.session() as session:
+            if dto.category_id is not None:
+                self._category_repo.get_by_id(session, dto.category_id)
+            if dto.location_id is not None:
+                self._location_repo.get_by_id(session, dto.location_id)
             post = self._repo.create(
                 session=session,
                 title=dto.title,

@@ -12,7 +12,7 @@ class GetAllCommentsUseCase:
 
     async def execute(self, limit: int = 100, offset: int = 0) -> List[CommentResponseSchema]:
         with self._database.session() as session:
-            comments = self._repo.get_all(session=session, limit=limit, offset=offset)
+            comments = self._repo.get_all_with_relations(session=session, limit=limit, offset=offset)
 
         return [
             CommentResponseSchema.model_validate(obj=comment)

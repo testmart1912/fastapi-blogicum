@@ -1,5 +1,3 @@
-from fastapi import HTTPException, status
-
 from src.infrastructure.sqlite.database import database
 from src.infrastructure.sqlite.repositories.locations import LocationRepository
 from src.schemas.locations import LocationSchema
@@ -13,11 +11,5 @@ class GetLocationByIdUseCase:
     async def execute(self, location_id: int) -> LocationSchema:
         with self._database.session() as session:
             location = self._repo.get_by_id(session=session, id=location_id)
-
-        if location is None:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f'Location with id {location_id} not found',
-            )
 
         return LocationSchema.model_validate(obj=location)
