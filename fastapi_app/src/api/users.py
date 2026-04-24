@@ -1,18 +1,21 @@
+from typing import Annotated
 from fastapi import APIRouter, status, Depends, HTTPException
 
 from src.schemas.users import UserSchema
 from src.domain.user.use_cases.get_user_by_username import GetUserByUsernameUseCase
 from src.core.exceptions.domain_exceptions import UserNotFoundByLoginException
 from src.api.depends import get_get_user_by_username_use_case
+from src.schemas.base import UsernameStr
+from src.services.auth import AuthService
 
 router = APIRouter()
 
 
 @router.get('/user/{username}', status_code=status.HTTP_200_OK, response_model=UserSchema)
 async def get_user_by_username(
-    username: str,
-    use_case: GetUserByUsernameUseCase = Depends(get_get_user_by_username_use_case),
-) -> UserSchema:
+    username: UsernameStr,
+    user: UserSchema = Depends(AuthService.get_current_user),
+    use_case: GetUserByUsernameUseCase = Depends(get_get_user_by_username_use_case)) -> UserSchema:
     try:
         return await use_case.execute(username=username)
     except UserNotFoundByLoginException as exc:

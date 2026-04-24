@@ -12,6 +12,7 @@ from src.core.exceptions.domain_exceptions import CategoryNotFoundByIdException
 from src.core.exceptions.domain_exceptions import CategoryNotFoundBySlugException
 from src.core.exceptions.domain_exceptions import CategorySlugAlreadyExistsException
 from src.api.depends import get_get_category_by_slug_use_case, get_get_category_by_id_use_case, get_create_category_use_case, get_update_category_use_case, get_delete_category_use_case, get_get_all_categories_use_case
+from src.schemas.base import SlugStr
 
 router = APIRouter()
 
@@ -40,7 +41,7 @@ async def get_category_by_id(
 
 @router.get('/category/slug/{slug}', status_code=status.HTTP_200_OK, response_model=CategorySchema)
 async def get_category_by_slug(
-    slug: str,
+    slug: SlugStr,
     use_case: GetCategoryBySlugUseCase = Depends(get_get_category_by_slug_use_case)) -> CategorySchema:
     try:
         category = await use_case.execute(slug=slug)

@@ -1,0 +1,45 @@
+from datetime import datetime
+
+from src.infrastructure.sqlite.database import database
+from src.infrastructure.sqlite.repositories.users import UserRepository
+from src.infrastructure.sqlite.models.users import User
+from src.schemas.users import UserSchema
+from src.resources.auth import get_password_hash
+from src.core.exceptions.database_exceptions import EntityAlreadyExistsException
+
+
+class CreateUserUseCase:
+    def __init__(self) -> None:
+        self._database = database
+        self._repo = UserRepository()
+
+    async def execute(self, username: str, password: str, email: str | None = None, first_name: str = '', last_name: str = '') -> UserSchema:
+        with self._database.session() as session:
+            try:
+                existing_user = self._repo.get_by_username(session=session, username=username)
+                if existing_user:
+                    raise EntityAlreadyExistsException(
+                        entity_name='User',
+                        detail=f'User with username "{username}" already exists'
+                    )
+            except Exception:
+                pass
+
+            user = User(
+                username=username,
+                password=get_password_hash(password),
+                email=email,
+                first_name=first_name,
+                last_name=last_name,
+                is_superuser=False,
+                is_staff=False,
+                is_active=True,
+                date_joined=datetime.now(),
+                last_login=None,
+            )
+
+            session.add(user)
+            session.commit()
+            session.refresh(user)
+
+            return UserSchema.model_validate(obj=user)

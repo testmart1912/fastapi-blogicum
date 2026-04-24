@@ -1,13 +1,13 @@
 from pydantic import Field, ConfigDict, BaseModel
 
-from src.schemas.base import BasePublishedSchema, BaseCreatedAtSchema
+from src.schemas.base import BasePublishedSchema, BaseCreatedAtSchema, SlugStr
 
 
-class CategoryCreateSchema(BasePublishedSchema):
+class CategoryCreateSchema(BasePublishedSchema, BaseCreatedAtSchema):
     model_config = ConfigDict(from_attributes=True)
     title: str = Field(min_length=1, max_length=256, description="Title")
     description: str = Field(min_length=1, max_length=2000, description="Description")
-    slug: str = Field(min_length=1, max_length=50, pattern=r'^[a-zA-Z0-9_-]+$', description="Identifier")
+    slug: SlugStr
 
 
 class CategoryUpdateSchema(BasePublishedSchema):
@@ -21,4 +21,4 @@ class CategorySchema(BasePublishedSchema, BaseCreatedAtSchema):
     id: int = Field(description='ID')
     title: str = Field(max_length=256, description="Title")
     description: str = Field(description="Description")
-    slug: str = Field(pattern=r'^[a-zA-Z0-9_-]+$', description="Identifier")
+    slug: SlugStr
