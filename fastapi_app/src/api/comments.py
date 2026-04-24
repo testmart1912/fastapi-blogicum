@@ -7,7 +7,9 @@ from src.domain.comment.use_cases.create_comment import CreateCommentUseCase
 from src.domain.comment.use_cases.update_comment import UpdateCommentUseCase
 from src.domain.comment.use_cases.delete_comment import DeleteCommentUseCase
 from src.domain.comment.use_cases.get_all_comments import GetAllCommentsUseCase
-from src.core.exceptions.domain_exceptions import CommentNotFoundByIdException
+from src.schemas.users import UserSchema
+from src.core.exceptions.domain_exceptions import CommentNotFoundByIdException, ForbiddenActionException
+from src.services.auth import AuthService
 from src.api.depends import get_get_comment_by_id_use_case, get_create_comment_use_case, get_update_comment_use_case, get_delete_comment_use_case, get_get_all_comments_use_case
 
 router = APIRouter()
@@ -38,8 +40,9 @@ async def get_comment_by_id(
 @router.post('/comment', status_code=status.HTTP_201_CREATED, response_model=CommentResponseSchema)
 async def create_comment(
     dto: CommentCreateSchema,
+    current_user: UserSchema = Depends(AuthService.get_current_user),
     use_case: CreateCommentUseCase = Depends(get_create_comment_use_case)) -> CommentResponseSchema:
-    comment = await use_case.execute(dto=dto)
+    comment = await use_case.execute(dto=dto, author_id=current_user.id)
     return comment
 
 
@@ -47,12 +50,20 @@ async def create_comment(
 async def update_comment(
     comment_id: int,
     dto: CommentUpdateSchema,
+    current_user: UserSchema = Depends(AuthService.get_current_user),
     use_case: UpdateCommentUseCase = Depends(get_update_comment_use_case)) -> CommentResponseSchema:
     try:
-        comment = await use_case.execute(comment_id=comment_id, dto=dto)
+        comment = await use_case.execute(
+            comment_id=comment_id, dto=dto, user_id=current_user.id,
+            is_staff=current_user.is_staff, is_superuser=current_user.is_superuser
+        )
     except CommentNotFoundByIdException as exc:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=exc.get_detail()
+        )
+    except ForbiddenActionException as exc:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail=exc.get_detail()
         )
     return comment
 
@@ -60,11 +71,19 @@ async def update_comment(
 @router.delete('/comment/{comment_id}', status_code=status.HTTP_200_OK)
 async def delete_comment(
     comment_id: int,
+    current_user: UserSchema = Depends(AuthService.get_current_user),
     use_case: DeleteCommentUseCase = Depends(get_delete_comment_use_case)) -> dict:
     try:
-        await use_case.execute(comment_id=comment_id)
+        await use_case.execute(
+            comment_id=comment_id, user_id=current_user.id,
+            is_staff=current_user.is_staff, is_superuser=current_user.is_superuser
+        )
     except CommentNotFoundByIdException as exc:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=exc.get_detail()
+        )
+    except ForbiddenActionException as exc:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail=exc.get_detail()
         )
     return {'message': 'Comment has been deleted'}

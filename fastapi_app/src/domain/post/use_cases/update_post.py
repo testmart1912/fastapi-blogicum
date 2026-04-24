@@ -5,6 +5,7 @@ from src.infrastructure.sqlite.repositories.locations import LocationRepository
 from src.schemas.posts import PostResponseSchema, PostUpdateSchema
 from src.core.exceptions.domain_exceptions import CategoryNotFoundByIdException
 from src.core.exceptions.domain_exceptions import LocationNotFoundByIdException
+from src.core.exceptions.domain_exceptions import ForbiddenActionException
 
 
 class UpdatePostUseCase:
@@ -14,8 +15,18 @@ class UpdatePostUseCase:
         self._category_repo = CategoryRepository()
         self._location_repo = LocationRepository()
 
-    async def execute(self, post_id: int, dto: PostUpdateSchema) -> PostResponseSchema:
+    async def execute(
+        self,
+        post_id: int,
+        dto: PostUpdateSchema,
+        user_id: int,
+        is_staff: bool = False,
+        is_superuser: bool = False) -> PostResponseSchema:
         with self._database.session() as session:
+            post = self._repo.get_by_id(session=session, id=post_id)
+
+            if not (is_superuser or is_staff or post.author_id == user_id):
+                raise ForbiddenActionException()
             if dto.category_id is not None:
                 self._category_repo.get_by_id(session, dto.category_id)
             if dto.location_id is not None:

@@ -1,6 +1,7 @@
 from src.infrastructure.sqlite.database import database
 from src.infrastructure.sqlite.repositories.locations import LocationRepository
 from src.schemas.locations import LocationSchema, LocationCreateUpdateSchema
+from src.core.exceptions.domain_exceptions import ForbiddenActionException
 
 
 class UpdateLocationUseCase:
@@ -8,7 +9,9 @@ class UpdateLocationUseCase:
         self._database = database
         self._repo = LocationRepository()
 
-    async def execute(self, location_id: int, dto: LocationCreateUpdateSchema) -> LocationSchema:
+    async def execute(self, location_id: int, dto: LocationCreateUpdateSchema, is_superuser: bool = False) -> LocationSchema:
+        if not is_superuser:
+            raise ForbiddenActionException()
         with self._database.session() as session:
             location = self._repo.update(
                 session=session,

@@ -1,6 +1,7 @@
 from src.infrastructure.sqlite.database import database
 from src.infrastructure.sqlite.repositories.categories import CategoryRepository
 from src.schemas.categories import CategorySchema, CategoryUpdateSchema
+from src.core.exceptions.domain_exceptions import ForbiddenActionException
 
 
 class UpdateCategoryUseCase:
@@ -8,7 +9,9 @@ class UpdateCategoryUseCase:
         self._database = database
         self._repo = CategoryRepository()
 
-    async def execute(self, category_id: int, dto: CategoryUpdateSchema) -> CategorySchema:
+    async def execute(self, category_id: int, dto: CategoryUpdateSchema, is_superuser: bool = False) -> CategorySchema:
+        if not is_superuser:
+            raise ForbiddenActionException()
         with self._database.session() as session:
             category = self._repo.update(
                 session=session,

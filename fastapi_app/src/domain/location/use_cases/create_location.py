@@ -4,7 +4,7 @@ from src.infrastructure.sqlite.database import database
 from src.infrastructure.sqlite.repositories.locations import LocationRepository
 from src.schemas.locations import LocationSchema, LocationCreateUpdateSchema
 from src.core.exceptions.database_exceptions import LocationNameConflictException
-from src.core.exceptions.domain_exceptions import LocationNameAlreadyExistsException
+from src.core.exceptions.domain_exceptions import LocationNameAlreadyExistsException, ForbiddenActionException
 
 
 class CreateLocationUseCase:
@@ -12,7 +12,9 @@ class CreateLocationUseCase:
         self._database = database
         self._repo = LocationRepository()
 
-    async def execute(self, dto: LocationCreateUpdateSchema) -> LocationSchema:
+    async def execute(self, dto: LocationCreateUpdateSchema, is_superuser: bool = False) -> LocationSchema:
+        if not is_superuser:
+            raise ForbiddenActionException()
         with self._database.session() as session:
             try:
                 location = self._repo.create(
