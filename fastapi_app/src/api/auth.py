@@ -10,7 +10,7 @@ from src.domain.auth.use_cases.create_access_token import CreateAccessTokenUseCa
 from src.domain.user.use_cases.create_user import CreateUserUseCase
 from src.core.exceptions.domain_exceptions import WrongPasswordException
 from src.core.exceptions.domain_exceptions import UserNotFoundByLoginException
-from src.core.exceptions.database_exceptions import EntityAlreadyExistsException
+from src.core.exceptions.domain_exceptions import UserAlreadyExistsException
 from src.api.depends import (
     create_access_token_use_case,
     authenticate_user_use_case,
@@ -54,5 +54,5 @@ async def register_user(
             last_name=user_data.last_name
         )
         return UserResponseSchema.model_validate(obj=user)
-    except EntityAlreadyExistsException as exc:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=exc.detail)
+    except UserAlreadyExistsException as exc:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=exc.get_detail())

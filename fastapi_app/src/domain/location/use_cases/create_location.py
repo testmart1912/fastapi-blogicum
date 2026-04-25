@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 
 from src.infrastructure.sqlite.database import database
@@ -5,6 +6,8 @@ from src.infrastructure.sqlite.repositories.locations import LocationRepository
 from src.schemas.locations import LocationSchema, LocationCreateUpdateSchema
 from src.core.exceptions.database_exceptions import LocationNameConflictException
 from src.core.exceptions.domain_exceptions import LocationNameAlreadyExistsException, ForbiddenActionException
+
+logger = logging.getLogger(__name__)
 
 
 class CreateLocationUseCase:
@@ -14,7 +17,9 @@ class CreateLocationUseCase:
 
     async def execute(self, dto: LocationCreateUpdateSchema, is_superuser: bool = False) -> LocationSchema:
         if not is_superuser:
-            raise ForbiddenActionException()
+            error = ForbiddenActionException()
+            logger.error('Attempting to create a location without superuser rights')
+            raise error
         with self._database.session() as session:
             try:
                 location = self._repo.create(

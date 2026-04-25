@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 
 from src.infrastructure.sqlite.database import database
@@ -5,6 +6,8 @@ from src.infrastructure.sqlite.repositories.categories import CategoryRepository
 from src.schemas.categories import CategorySchema, CategoryCreateSchema
 from src.core.exceptions.database_exceptions import CategorySlugConflictException
 from src.core.exceptions.domain_exceptions import CategorySlugAlreadyExistsException, ForbiddenActionException
+
+logger = logging.getLogger(__name__)
 
 
 class CreateCategoryUseCase:
@@ -14,7 +17,9 @@ class CreateCategoryUseCase:
 
     async def execute(self, dto: CategoryCreateSchema, is_superuser: bool = False) -> CategorySchema:
         if not is_superuser:
-            raise ForbiddenActionException()
+            error = ForbiddenActionException()
+            logger.error('Attempting to create a category without superuser rights')
+            raise error
         with self._database.session() as session:
             try:
                 category = self._repo.create(

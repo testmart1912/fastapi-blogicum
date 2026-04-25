@@ -1,3 +1,5 @@
+import logging
+
 from src.infrastructure.sqlite.database import database
 from src.infrastructure.sqlite.repositories.posts import PostRepository
 from src.infrastructure.sqlite.repositories.categories import CategoryRepository
@@ -6,6 +8,8 @@ from src.schemas.posts import PostResponseSchema, PostUpdateSchema
 from src.core.exceptions.domain_exceptions import CategoryNotFoundByIdException
 from src.core.exceptions.domain_exceptions import LocationNotFoundByIdException
 from src.core.exceptions.domain_exceptions import ForbiddenActionException
+
+logger = logging.getLogger(__name__)
 
 
 class UpdatePostUseCase:
@@ -26,7 +30,12 @@ class UpdatePostUseCase:
             post = self._repo.get_by_id(session=session, id=post_id)
 
             if not (is_superuser or is_staff or post.author_id == user_id):
-                raise ForbiddenActionException()
+                error = ForbiddenActionException()
+                logger.error(
+                    f'User {user_id} attempted to update someone else\'s post {post_id} '
+                    f'(author: {post.author_id})'
+                )
+                raise error
             if dto.category_id is not None:
                 self._category_repo.get_by_id(session, dto.category_id)
             if dto.location_id is not None:

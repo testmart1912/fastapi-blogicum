@@ -14,10 +14,10 @@ def create_app() -> FastAPI:
     setup_logging(
         log_file=settings.LOG_FILE,
         max_bytes=settings.LOG_MAX_BYTES,
-        backup_count=settings.LOG_BACKUP_COUNT,
+        backup_count=settings.LOG_BACKUP_COUNT
     )
 
-    app = FastAPI(root_path='/src.api/v1')
+    app = FastAPI()
     app.add_middleware(
         CORSMiddleware,
         allow_origins=['*'],
@@ -26,12 +26,12 @@ def create_app() -> FastAPI:
         allow_headers=['*'],
     )
 
-    app.include_router(auth_router, tags=['Auth'])
-    app.include_router(posts_router, tags=['Posts'])
-    app.include_router(users_router, tags=['Users'])
-    app.include_router(locations_router, tags=['Locations'])
-    app.include_router(categories_router, tags=['Categories'])
-    app.include_router(comments_router, tags=['Comments'])
+    app.include_router(auth_router, prefix='/api/v1', tags=['Auth'])
+    app.include_router(posts_router, prefix='/api/v1', tags=['Posts'])
+    app.include_router(users_router, prefix='/api/v1', tags=['Users'])
+    app.include_router(locations_router, prefix='/api/v1', tags=['Locations'])
+    app.include_router(categories_router, prefix='/api/v1', tags=['Categories'])
+    app.include_router(comments_router, prefix='/api/v1', tags=['Comments'])
     return app
 
 

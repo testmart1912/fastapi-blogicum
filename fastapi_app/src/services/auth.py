@@ -1,3 +1,4 @@
+import logging
 from typing import Annotated
 
 from fastapi import Depends
@@ -11,6 +12,8 @@ from src.infrastructure.sqlite.database import database as sqlite_database
 from src.infrastructure.sqlite.database import Database
 from src.infrastructure.sqlite.repositories.users import UserRepository
 from src.core.config import settings
+
+logger = logging.getLogger(__name__)
 
 
 class AuthService:
@@ -28,14 +31,17 @@ class AuthService:
             )
             username = payload.get('sub')
             if username is None:
+                logger.error("Access attempt with invalid token (missing username)")
                 raise CredentialsException(detail=_AUTH_EXCEPTION_MESSAGE)
-        except JWTError:
+        except JWTError as e:
+            logger.error(f"Access attempt with invalid JWT token {str(e)}")
             raise CredentialsException(detail=_AUTH_EXCEPTION_MESSAGE)
 
         try:
             with _database.session() as session:
-                user = _repo.get_by_username(session=session, username=username)
+                user = _repo.get_by_username_or_raise(session=session, username=username)
         except EntityNotFoundException:
+            logger.error(f"Access attempt with a non-existent user token - {username}")
             raise CredentialsException(detail=_AUTH_EXCEPTION_MESSAGE)
 
         return UserSchema.model_validate(obj=user)
