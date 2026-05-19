@@ -4,7 +4,7 @@ from fastapi import APIRouter, status, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 
 from src.schemas.auth import Token
-from src.schemas.users import UserCreateSchema, UserResponseSchema
+from src.schemas.users import UserCreateUpdateSchema, UserResponseSchema
 from src.domain.auth.use_cases.authenticate_user import AuthenticateUserUseCase
 from src.domain.auth.use_cases.create_access_token import CreateAccessTokenUseCase
 from src.domain.user.use_cases.create_user import CreateUserUseCase
@@ -43,7 +43,7 @@ async def login_for_access_token(
 
 @router.post('/register', response_model=UserResponseSchema, status_code=status.HTTP_201_CREATED)
 async def register_user(
-    user_data: UserCreateSchema,
+    user_data: UserCreateUpdateSchema,
     create_user_use_case: CreateUserUseCase = Depends(get_create_user_use_case)) -> UserResponseSchema:
     try:
         user = await create_user_use_case.execute(

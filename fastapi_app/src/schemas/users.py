@@ -21,12 +21,12 @@ class UserSchema(BaseModel):
     date_joined: datetime
 
 
-class UserCreateSchema(BaseModel):
-    username: UsernameStr = Field(description='Имя пользователя')
-    password: str = Field(min_length=8, max_length=128, description='Пароль')
+class UserCreateUpdateSchema(BaseModel):
+    username: UsernameStr = Field(description='Username')
+    password: str = Field(min_length=8, max_length=128, description='Password')
     email: ValidatedEmail | None = Field(None, description='Email')
-    first_name: str = Field('', max_length=150, description='Имя')
-    last_name: str = Field('', max_length=150, description='Фамилия')
+    first_name: str = Field('', max_length=150, description='Name')
+    last_name: str = Field('', max_length=150, description='Surname')
 
 
 class UserResponseSchema(BaseModel):
