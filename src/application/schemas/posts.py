@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import Field, ConfigDict
+from pydantic import Field, ConfigDict, BaseModel
 
 from application.schemas.users import UserSchema
 from application.schemas.locations import LocationSchema
@@ -15,7 +15,7 @@ class PostCreateSchema(BasePublishedSchema):
     pub_date: datetime = Field(default_factory=datetime.today, description="Date of publication")
     location_id: int = Field(description="Location ID")
     category_id: int = Field(description="Category ID")
-    image: str = Field(max_length=500, description="Image")
+    image_path: str | None = Field(None, max_length=512, description="Image")
 
 
 class PostUpdateSchema(BasePublishedSchema):
@@ -24,6 +24,7 @@ class PostUpdateSchema(BasePublishedSchema):
     text: str = Field(min_length=1, description="Text")
     location_id: int = Field(description="Location ID")
     category_id: int = Field(description="Category ID")
+    image_path: str | None = Field(None, max_length=512, description="Image")
 
 
 class PostResponseSchema(BaseCreatedAtSchema, BasePublishedSchema):
@@ -35,4 +36,8 @@ class PostResponseSchema(BaseCreatedAtSchema, BasePublishedSchema):
     pub_date: datetime = Field(default_factory=datetime.today, description="Date of publication")
     location: LocationSchema = Field(description="Location")
     category: CategorySchema = Field(description="Category")
-    image: str = Field(description="Image")
+    image_path: str | None = Field(None, description="Image")
+
+
+class PostImageResponse(BaseModel):
+    image_path: str = Field(..., description="Image")

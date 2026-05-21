@@ -1,10 +1,10 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
-from application.infrastructure.sqlite.database import database
-from application.infrastructure.sqlite.repositories.posts import PostRepository
+from application.infrastructure.database.database import database
+from application.infrastructure.database.repositories.posts import PostRepository
 from application.schemas.posts import PostResponseSchema, PostCreateSchema
-from application.infrastructure.sqlite.repositories.categories import CategoryRepository
-from application.infrastructure.sqlite.repositories.locations import LocationRepository
+from application.infrastructure.database.repositories.categories import CategoryRepository
+from application.infrastructure.database.repositories.locations import LocationRepository
 
 
 class CreatePostUseCase:
@@ -15,25 +15,26 @@ class CreatePostUseCase:
         self._location_repo = LocationRepository()
 
     async def execute(self, dto: PostCreateSchema, author_id: int) -> PostResponseSchema:
-        with self._database.session() as session:
+        async with self._database.session() as session:
             if dto.category_id is not None:
-                self._category_repo.get_by_id(session, dto.category_id)
+                await self._category_repo.get_by_id(session, dto.category_id)
             if dto.location_id is not None:
-                self._location_repo.get_by_id(session, dto.location_id)
-            post = self._repo.create(
+                await self._location_repo.get_by_id(session, dto.location_id)
+            post = await self._repo.create(
                 session=session,
                 title=dto.title,
                 text=dto.text,
                 is_published=dto.is_published,
-                created_at=datetime.now(),
-                pub_date=dto.pub_date,
+                created_at=datetime.now(timezone.utc).replace(tzinfo=None),
+                pub_date=dto.pub_date.replace(tzinfo=None) if dto.pub_date.tzinfo else dto.pub_date,
                 author_id=author_id,
                 category_id=dto.category_id,
                 location_id=dto.location_id,
-                image=dto.image or '',
+                image_path=dto.image_path or '',
             )
-            session.flush()
-            post_with_relations = self._repo.get_by_id_with_relations(
+            await session.commit()
+            await session.refresh(post)
+            post_with_relations = await self._repo.get_by_id_with_relations(
                 session=session, post_id=post.id
             )
 

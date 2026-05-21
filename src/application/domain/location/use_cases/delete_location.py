@@ -1,7 +1,7 @@
 import logging
 
-from application.infrastructure.sqlite.database import database
-from application.infrastructure.sqlite.repositories.locations import LocationRepository
+from application.infrastructure.database.database import database
+from application.infrastructure.database.repositories.locations import LocationRepository
 from application.core.exceptions.domain_exceptions import ForbiddenActionException
 
 logger = logging.getLogger(__name__)
@@ -17,7 +17,7 @@ class DeleteLocationUseCase:
             error = ForbiddenActionException()
             logger.error(f'Attempting to delete a location {location_id} without superuser rights')
             raise error
-        with self._database.session() as session:
-            self._repo.delete(session=session, id=location_id)
+        async with self._database.session() as session:
+            await self._repo.delete(session=session, id=location_id)
 
         return True

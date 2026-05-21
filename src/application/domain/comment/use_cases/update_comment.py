@@ -1,7 +1,7 @@
 import logging
 
-from application.infrastructure.sqlite.database import database
-from application.infrastructure.sqlite.repositories.comments import CommentRepository
+from application.infrastructure.database.database import database
+from application.infrastructure.database.repositories.comments import CommentRepository
 from application.schemas.comments import CommentResponseSchema, CommentUpdateSchema
 from application.core.exceptions.domain_exceptions import ForbiddenActionException
 
@@ -20,8 +20,8 @@ class UpdateCommentUseCase:
         user_id: int,
         is_staff: bool = False,
         is_superuser: bool = False,) -> CommentResponseSchema:
-        with self._database.session() as session:
-            comment = self._repo.get_by_id(session=session, id=comment_id)
+        async with self._database.session() as session:
+            comment = await self._repo.get_by_id(session=session, id=comment_id)
 
             if not (is_superuser or is_staff or comment.author_id == user_id):
                 error = ForbiddenActionException()
@@ -30,13 +30,13 @@ class UpdateCommentUseCase:
                     f'(author: {comment.author_id})'
                 )
                 raise error
-            comment = self._repo.update(
+            comment = await self._repo.update(
                 session=session,
                 id=comment_id,
                 text=dto.text,
             )
 
-            comment_with_relations = self._repo.get_by_id_with_relations(
+            comment_with_relations = await self._repo.get_by_id_with_relations(
                 session=session, comment_id=comment.id
             )
 

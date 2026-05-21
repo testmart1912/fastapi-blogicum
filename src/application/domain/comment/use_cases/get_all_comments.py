@@ -1,7 +1,7 @@
 from typing import List
 
-from application.infrastructure.sqlite.database import database
-from application.infrastructure.sqlite.repositories.comments import CommentRepository
+from application.infrastructure.database.database import database
+from application.infrastructure.database.repositories.comments import CommentRepository
 from application.schemas.comments import CommentResponseSchema
 
 
@@ -11,8 +11,8 @@ class GetAllCommentsUseCase:
         self._repo = CommentRepository()
 
     async def execute(self, limit: int = 100, offset: int = 0) -> List[CommentResponseSchema]:
-        with self._database.session() as session:
-            comments = self._repo.get_all_with_relations(session=session, limit=limit, offset=offset)
+        async with self._database.session() as session:
+            comments = await self._repo.get_all_with_relations(session=session, limit=limit, offset=offset)
 
         return [
             CommentResponseSchema.model_validate(obj=comment)

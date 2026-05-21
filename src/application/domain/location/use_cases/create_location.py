@@ -1,8 +1,8 @@
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 
-from application.infrastructure.sqlite.database import database
-from application.infrastructure.sqlite.repositories.locations import LocationRepository
+from application.infrastructure.database.database import database
+from application.infrastructure.database.repositories.locations import LocationRepository
 from application.schemas.locations import LocationSchema, LocationCreateUpdateSchema
 from application.core.exceptions.database_exceptions import LocationNameConflictException
 from application.core.exceptions.domain_exceptions import LocationNameAlreadyExistsException, ForbiddenActionException
@@ -20,13 +20,13 @@ class CreateLocationUseCase:
             error = ForbiddenActionException()
             logger.error('Attempting to create a location without superuser rights')
             raise error
-        with self._database.session() as session:
+        async with self._database.session() as session:
             try:
-                location = self._repo.create(
+                location = await self._repo.create(
                     session=session,
                     name=dto.name,
                     is_published=dto.is_published,
-                    created_at=datetime.now(),
+                    created_at=datetime.now(timezone.utc).replace(tzinfo=None),
                 )
             except LocationNameConflictException:
                 raise LocationNameAlreadyExistsException(dto.name)

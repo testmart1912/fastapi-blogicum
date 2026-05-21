@@ -1,7 +1,7 @@
 import logging
 
-from application.infrastructure.sqlite.database import database
-from application.infrastructure.sqlite.repositories.categories import CategoryRepository
+from application.infrastructure.database.database import database
+from application.infrastructure.database.repositories.categories import CategoryRepository
 from application.core.exceptions.domain_exceptions import ForbiddenActionException
 
 logger = logging.getLogger(__name__)
@@ -17,7 +17,7 @@ class DeleteCategoryUseCase:
             error = ForbiddenActionException()
             logger.error(f'Attempting to delete a category {category_id} without superuser rights')
             raise error
-        with self._database.session() as session:
-            self._repo.delete(session=session, id=category_id)
+        async with self._database.session() as session:
+            await self._repo.delete(session=session, id=category_id)
 
         return True

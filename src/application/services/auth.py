@@ -8,9 +8,9 @@ from application.core.exceptions.auth_exceptions import CredentialsException
 from application.core.exceptions.database_exceptions import EntityNotFoundException
 from application.schemas.users import UserSchema
 from application.resources.auth import oauth2_scheme
-from application.infrastructure.sqlite.database import database as sqlite_database
-from application.infrastructure.sqlite.database import Database
-from application.infrastructure.sqlite.repositories.users import UserRepository
+from application.infrastructure.database.database import database as sqlite_database
+from application.infrastructure.database.database import Database
+from application.infrastructure.database.repositories.users import UserRepository
 from application.core.config import settings
 
 logger = logging.getLogger(__name__)
@@ -38,8 +38,8 @@ class AuthService:
             raise CredentialsException(detail=_AUTH_EXCEPTION_MESSAGE)
 
         try:
-            with _database.session() as session:
-                user = _repo.get_by_username_or_raise(session=session, username=username)
+            async with _database.session() as session:
+                user = await _repo.get_by_username_or_raise(session=session, username=username)
         except EntityNotFoundException:
             logger.error(f"Access attempt with a non-existent user token - {username}")
             raise CredentialsException(detail=_AUTH_EXCEPTION_MESSAGE)

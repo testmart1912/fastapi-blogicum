@@ -1,7 +1,7 @@
 import logging
 
-from application.infrastructure.sqlite.database import database
-from application.infrastructure.sqlite.repositories.categories import CategoryRepository
+from application.infrastructure.database.database import database
+from application.infrastructure.database.repositories.categories import CategoryRepository
 from application.schemas.categories import CategorySchema, CategoryUpdateSchema
 from application.core.exceptions.domain_exceptions import ForbiddenActionException
 
@@ -18,8 +18,8 @@ class UpdateCategoryUseCase:
             error = ForbiddenActionException()
             logger.error(f'Attempting to update a category {category_id} without superuser rights')
             raise error
-        with self._database.session() as session:
-            category = self._repo.update(
+        async with self._database.session() as session:
+            category = await self._repo.update(
                 session=session,
                 id=category_id,
                 title=dto.title,

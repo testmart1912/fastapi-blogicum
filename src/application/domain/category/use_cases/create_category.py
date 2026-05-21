@@ -1,8 +1,8 @@
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 
-from application.infrastructure.sqlite.database import database
-from application.infrastructure.sqlite.repositories.categories import CategoryRepository
+from application.infrastructure.database.database import database
+from application.infrastructure.database.repositories.categories import CategoryRepository
 from application.schemas.categories import CategorySchema, CategoryCreateSchema
 from application.core.exceptions.database_exceptions import CategorySlugConflictException
 from application.core.exceptions.domain_exceptions import CategorySlugAlreadyExistsException, ForbiddenActionException
@@ -20,15 +20,15 @@ class CreateCategoryUseCase:
             error = ForbiddenActionException()
             logger.error('Attempting to create a category without superuser rights')
             raise error
-        with self._database.session() as session:
+        async with self._database.session() as session:
             try:
-                category = self._repo.create(
+                category = await self._repo.create(
                     session=session,
                     title=dto.title,
                     description=dto.description,
                     slug=dto.slug,
                     is_published=dto.is_published,
-                    created_at=datetime.now(),
+                    created_at=datetime.now(timezone.utc).replace(tzinfo=None),
                 )
             except CategorySlugConflictException:
                 raise CategorySlugAlreadyExistsException(dto.slug)

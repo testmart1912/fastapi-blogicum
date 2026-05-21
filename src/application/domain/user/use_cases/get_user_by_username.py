@@ -1,7 +1,7 @@
 import logging
 
-from application.infrastructure.sqlite.database import database
-from application.infrastructure.sqlite.repositories.users import UserRepository
+from application.infrastructure.database.database import database
+from application.infrastructure.database.repositories.users import UserRepository
 from application.schemas.users import UserSchema
 from application.core.exceptions.database_exceptions import UserNotFoundException
 from application.core.exceptions.domain_exceptions import UserNotFoundByLoginException
@@ -16,8 +16,8 @@ class GetUserByUsernameUseCase:
 
     async def execute(self, username: str) -> UserSchema:
         try:
-            with self._database.session() as session:
-                user = self._repo.get_by_username_or_raise(
+            async with self._database.session() as session:
+                user = await self._repo.get_by_username_or_raise(
                     session=session, username=username
                 )
         except UserNotFoundException:

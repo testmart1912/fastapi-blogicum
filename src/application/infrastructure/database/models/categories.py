@@ -2,7 +2,7 @@ from datetime import datetime
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from application.infrastructure.sqlite.database import Base
+from application.infrastructure.database.database import Base
 
 
 class Category(Base):

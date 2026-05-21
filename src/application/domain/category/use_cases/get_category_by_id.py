@@ -1,5 +1,5 @@
-from application.infrastructure.sqlite.database import database
-from application.infrastructure.sqlite.repositories.categories import CategoryRepository
+from application.infrastructure.database.database import database
+from application.infrastructure.database.repositories.categories import CategoryRepository
 from application.schemas.categories import CategorySchema
 
 
@@ -9,7 +9,7 @@ class GetCategoryByIdUseCase:
         self._repo = CategoryRepository()
 
     async def execute(self, category_id: int) -> CategorySchema:
-        with self._database.session() as session:
-            category = self._repo.get_by_id(session=session, id=category_id)
+        async with self._database.session() as session:
+            category = await self._repo.get_by_id(session=session, id=category_id)
 
         return CategorySchema.model_validate(obj=category)

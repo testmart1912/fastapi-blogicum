@@ -101,3 +101,17 @@ class UserAlreadyExistsException(BaseDomainException):
             username=username
         )
         super().__init__(detail=self._exception_text_template)
+
+
+class PostHasNoImageException(BaseDomainException):
+    _exception_text = "Post has no image"
+
+    def __init__(self) -> None:
+        super().__init__(detail=self._exception_text)
+
+
+class UploadFileIsNotImageException(BaseDomainException):
+    _exception_text = "Uploaded file is not image"
+
+    def __init__(self) -> None:
+        super().__init__(detail=self._exception_text)

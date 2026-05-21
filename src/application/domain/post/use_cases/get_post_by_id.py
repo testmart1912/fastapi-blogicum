@@ -1,5 +1,5 @@
-from application.infrastructure.sqlite.database import database
-from application.infrastructure.sqlite.repositories.posts import PostRepository
+from application.infrastructure.database.database import database
+from application.infrastructure.database.repositories.posts import PostRepository
 from application.schemas.posts import PostResponseSchema
 from application.core.exceptions.database_exceptions import PostNotFoundException
 from application.core.exceptions.domain_exceptions import PostNotFoundByIdException
@@ -12,8 +12,8 @@ class GetPostByIdUseCase:
 
     async def execute(self, post_id: int) -> PostResponseSchema:
         try:
-            with self._database.session() as session:
-                post = self._repo.get_by_id_with_relations(
+            async with self._database.session() as session:
+                post = await self._repo.get_by_id_with_relations(
                     session=session, post_id=post_id
                 )
         except PostNotFoundException:

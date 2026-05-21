@@ -1,7 +1,7 @@
 import logging
 
-from application.infrastructure.sqlite.database import database
-from application.infrastructure.sqlite.repositories.users import UserRepository
+from application.infrastructure.database.database import database
+from application.infrastructure.database.repositories.users import UserRepository
 from application.schemas.users import UserSchema
 from application.resources.auth import verify_password
 from application.core.exceptions.database_exceptions import EntityNotFoundException
@@ -18,8 +18,8 @@ class AuthenticateUserUseCase:
 
     async def execute(self, username: str, password: str) -> UserSchema:
         try:
-            with self._database.session() as session:
-                user = self._repo.get_by_username_or_raise(session=session, username=username)
+            async with self._database.session() as session:
+                user = await self._repo.get_by_username_or_raise(session=session, username=username)
         except EntityNotFoundException:
             error = UserNotFoundByLoginException(username=username)
             logger.error(f'Attempted to log in with a non-existent login {username}')

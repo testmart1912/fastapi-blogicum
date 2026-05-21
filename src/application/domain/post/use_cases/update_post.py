@@ -1,9 +1,9 @@
 import logging
 
-from application.infrastructure.sqlite.database import database
-from application.infrastructure.sqlite.repositories.posts import PostRepository
-from application.infrastructure.sqlite.repositories.categories import CategoryRepository
-from application.infrastructure.sqlite.repositories.locations import LocationRepository
+from application.infrastructure.database.database import database
+from application.infrastructure.database.repositories.posts import PostRepository
+from application.infrastructure.database.repositories.categories import CategoryRepository
+from application.infrastructure.database.repositories.locations import LocationRepository
 from application.schemas.posts import PostResponseSchema, PostUpdateSchema
 from application.core.exceptions.domain_exceptions import CategoryNotFoundByIdException
 from application.core.exceptions.domain_exceptions import LocationNotFoundByIdException
@@ -26,8 +26,8 @@ class UpdatePostUseCase:
         user_id: int,
         is_staff: bool = False,
         is_superuser: bool = False) -> PostResponseSchema:
-        with self._database.session() as session:
-            post = self._repo.get_by_id(session=session, id=post_id)
+        async with self._database.session() as session:
+            post = await self._repo.get_by_id(session=session, id=post_id)
 
             if not (is_superuser or is_staff or post.author_id == user_id):
                 error = ForbiddenActionException()
@@ -37,10 +37,20 @@ class UpdatePostUseCase:
                 )
                 raise error
             if dto.category_id is not None:
-                self._category_repo.get_by_id(session, dto.category_id)
+                try:
+                    await self._category_repo.get_by_id(session, dto.category_id)
+                except CategoryNotFoundByIdException as e:
+                    logger.error(f'Category {dto.category_id} not found')
+                    raise e
+
             if dto.location_id is not None:
-                self._location_repo.get_by_id(session, dto.location_id)
-            post = self._repo.update(
+                try:
+                    await self._location_repo.get_by_id(session, dto.location_id)
+                except LocationNotFoundByIdException as e:
+                    logger.error(f'Location {dto.location_id} not found')
+                    raise e
+
+            post = await self._repo.update(
                 session=session,
                 id=post_id,
                 title=dto.title,
@@ -48,9 +58,11 @@ class UpdatePostUseCase:
                 is_published=dto.is_published,
                 category_id=dto.category_id,
                 location_id=dto.location_id,
+                image_path=dto.image_path
             )
-
-            post_with_relations = self._repo.get_by_id_with_relations(
+            await session.commit()
+            await session.refresh(post)
+            post_with_relations = await self._repo.get_by_id_with_relations(
                 session=session, post_id=post.id
             )
 

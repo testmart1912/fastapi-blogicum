@@ -1,7 +1,7 @@
 import logging
 
-from application.infrastructure.sqlite.database import database
-from application.infrastructure.sqlite.repositories.users import UserRepository
+from application.infrastructure.database.database import database
+from application.infrastructure.database.repositories.users import UserRepository
 from application.schemas.users import UserResponseSchema, UserCreateUpdateSchema
 from application.core.exceptions.domain_exceptions import (
     UserNotFoundByIdException,
@@ -32,11 +32,11 @@ class UpdateUserUseCase:
         if 'password' in update_data:
             update_data['password'] = get_password_hash(update_data['password'])
 
-        with self._database.session() as session:
+        async with self._database.session() as session:
             try:
-                user = self._repo.update(session=session, id=target_user_id, **update_data)
-                session.commit()
-                session.refresh(user)
+                user = await self._repo.update(session=session, id=target_user_id, **update_data)
+                await session.commit()
+                await session.refresh(user)
             except Exception:
                 raise UserNotFoundByIdException(id=target_user_id)
 

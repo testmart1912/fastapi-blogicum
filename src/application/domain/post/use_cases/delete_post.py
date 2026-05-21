@@ -1,7 +1,7 @@
 import logging
 
-from application.infrastructure.sqlite.database import database
-from application.infrastructure.sqlite.repositories.posts import PostRepository
+from application.infrastructure.database.database import database
+from application.infrastructure.database.repositories.posts import PostRepository
 from application.core.exceptions.domain_exceptions import ForbiddenActionException
 
 logger = logging.getLogger(__name__)
@@ -18,8 +18,8 @@ class DeletePostUseCase:
             user_id: int,
             is_staff: bool = False,
             is_superuser: bool = False) -> bool:
-        with self._database.session() as session:
-            post = self._repo.get_by_id(session=session, id=post_id)
+        async with self._database.session() as session:
+            post = await self._repo.get_by_id(session=session, id=post_id)
 
             if not (is_superuser or is_staff or post.author_id == user_id):
                 error = ForbiddenActionException()
@@ -28,6 +28,7 @@ class DeletePostUseCase:
                     f'(author: {post.author_id})'
                 )
                 raise error
-            self._repo.delete(session=session, id=post_id)
+            await self._repo.delete(session=session, id=post_id)
+            await session.commit()
 
         return True

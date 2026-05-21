@@ -1,7 +1,7 @@
 from typing import List
 
-from application.infrastructure.sqlite.database import database
-from application.infrastructure.sqlite.repositories.categories import CategoryRepository
+from application.infrastructure.database.database import database
+from application.infrastructure.database.repositories.categories import CategoryRepository
 from application.schemas.categories import CategorySchema
 
 
@@ -11,7 +11,7 @@ class GetAllCategoriesUseCase:
         self._repo = CategoryRepository()
 
     async def execute(self, limit: int = 100, offset: int = 0) -> List[CategorySchema]:
-        with self._database.session() as session:
-            categories = self._repo.get_all(session=session, limit=limit, offset=offset)
+        async with self._database.session() as session:
+            categories = await self._repo.get_all(session=session, limit=limit, offset=offset)
 
         return [CategorySchema.model_validate(obj=cat) for cat in categories]
